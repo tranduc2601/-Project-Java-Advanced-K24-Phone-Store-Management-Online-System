@@ -169,14 +169,18 @@ public class ProductDAO {
         return false;
     }
 
-    public boolean deductStock(Connection conn, int productId, int quantity) throws SQLException {
+    public boolean deductStock(int productId, int quantity) {
         String sql = "UPDATE Products SET stock = stock - ? WHERE product_id = ? AND stock >= ?";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, quantity);
-        ps.setInt(2, productId);
-        ps.setInt(3, quantity);
-        int affected = ps.executeUpdate();
-        return affected > 0;
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, quantity);
+            ps.setInt(2, productId);
+            ps.setInt(3, quantity);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Loi khi tru ton kho: " + e.getMessage());
+        }
+        return false;
     }
 
     private Product mapResultSet(ResultSet rs) throws SQLException {

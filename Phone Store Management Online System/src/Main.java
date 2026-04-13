@@ -6,7 +6,6 @@ import presentation.CustomerMenu;
 import java.util.Scanner;
 
 public class Main {
-    // Chạy chương trình chính, hiển thị menu đăng nhập và điều hướng theo vai trò
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         AuthMenu authMenu = new AuthMenu();

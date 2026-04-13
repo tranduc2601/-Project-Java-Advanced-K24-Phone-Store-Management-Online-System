@@ -8,7 +8,6 @@ public class OrderDetail {
     private int productId;
     private int quantity;
     private BigDecimal unitPrice;
-    // Extra for display
     private String productName;
 
     public OrderDetail() {}

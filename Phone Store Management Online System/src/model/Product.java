@@ -11,7 +11,6 @@ public class Product {
     private String color;
     private String storageCapacity;
     private boolean status;
-    // Extra field for display (JOIN with Categories)
     private String categoryName;
 
     public Product() {}

@@ -1,4 +1,3 @@
-
 package dao;
 
 import model.OrderDetail;
@@ -10,14 +9,19 @@ import java.util.List;
 
 public class OrderDetailDAO {
 
-    public boolean addDetail(Connection conn, OrderDetail detail) throws SQLException {
+    public boolean addDetail(OrderDetail detail) {
         String sql = "INSERT INTO OrderDetails (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setInt(1, detail.getOrderId());
-        ps.setInt(2, detail.getProductId());
-        ps.setInt(3, detail.getQuantity());
-        ps.setBigDecimal(4, detail.getUnitPrice());
-        return ps.executeUpdate() > 0;
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, detail.getOrderId());
+            ps.setInt(2, detail.getProductId());
+            ps.setInt(3, detail.getQuantity());
+            ps.setBigDecimal(4, detail.getUnitPrice());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Loi khi luu chi tiet don hang: " + e.getMessage());
+        }
+        return false;
     }
 
     public List<OrderDetail> findByOrderId(int orderId) {
@@ -39,9 +43,8 @@ public class OrderDetailDAO {
                 details.add(d);
             }
         } catch (SQLException e) {
-            System.err.println("Lỗi khi lấy chi tiết đơn hàng: " + e.getMessage());
+            System.err.println("Loi khi lay chi tiet don hang: " + e.getMessage());
         }
         return details;
     }
 }
-

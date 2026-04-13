@@ -1,17 +1,11 @@
 package util;
 
-import org.mindrot.jbcrypt.BCrypt;
-
 public class PasswordUtil {
+    // cannot ma hoa mat khau
     public static String hashPassword(String rawPassword) {
-        return BCrypt.hashpw(rawPassword, BCrypt.gensalt(12));
+        return rawPassword;
     }
-
-    public static boolean checkPassword(String rawPassword, String hashedPassword) {
-        try {
-            return BCrypt.checkpw(rawPassword, hashedPassword);
-        } catch (Exception e) {
-            return rawPassword.equals(hashedPassword);
-        }
+    public static boolean checkPassword(String rawPassword, String storedPassword) {
+        return rawPassword != null && rawPassword.equals(storedPassword);
     }
 }

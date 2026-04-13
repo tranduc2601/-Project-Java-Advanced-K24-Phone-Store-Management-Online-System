@@ -4,14 +4,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Quản lý kết nối cơ sở dữ liệu MySQL.
- * Cấu hình: sửa URL, USER, PASS cho phù hợp với máy của bạn.
- */
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/PhoneStoreDB?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-    private static final String USER = "root"; // Đ
-    private static final String PASS = "tmd2601."; // Đổi mật khẩu MySQL của bạn ở đây
+    private static final String USER = "root";
+    private static final String PASS = "tmd2601.";
 
     static {
         try {
