@@ -1,3 +1,4 @@
+
 package dao;
 
 import model.Product;
@@ -8,18 +9,12 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object cho bảng Products.
- */
 public class ProductDAO {
 
     private static final String SELECT_WITH_CATEGORY =
             "SELECT p.*, c.category_name FROM Products p " +
             "LEFT JOIN Categories c ON p.category_id = c.category_id";
 
-    /**
-     * Lấy tất cả sản phẩm (có phân trang)
-     */
     public List<Product> findAllPaginated(int page, int pageSize) {
         List<Product> products = new ArrayList<>();
         String sql = SELECT_WITH_CATEGORY + " WHERE p.status = 1 ORDER BY p.product_id LIMIT ? OFFSET ?";
@@ -32,14 +27,11 @@ public class ProductDAO {
                 products.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi lấy danh sách sản phẩm: " + e.getMessage());
         }
         return products;
     }
 
-    /**
-     * Đếm tổng số sản phẩm đang hoạt động
-     */
     public int countActive() {
         String sql = "SELECT COUNT(*) FROM Products WHERE status = 1";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -47,14 +39,11 @@ public class ProductDAO {
              ResultSet rs = ps.executeQuery()) {
             if (rs.next()) return rs.getInt(1);
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi đếm sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi đếm sản phẩm: " + e.getMessage());
         }
         return 0;
     }
 
-    /**
-     * Lấy tất cả sản phẩm đang hoạt động (không phân trang)
-     */
     public List<Product> findAllActive() {
         List<Product> products = new ArrayList<>();
         String sql = SELECT_WITH_CATEGORY + " WHERE p.status = 1 ORDER BY p.product_id";
@@ -65,14 +54,11 @@ public class ProductDAO {
                 products.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi lấy sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi lấy sản phẩm: " + e.getMessage());
         }
         return products;
     }
 
-    /**
-     * Lấy sản phẩm còn hàng (stock > 0 và status = 1) - dành cho Customer
-     */
     public List<Product> findInStock() {
         List<Product> products = new ArrayList<>();
         String sql = SELECT_WITH_CATEGORY + " WHERE p.status = 1 AND p.stock > 0 ORDER BY p.product_id";
@@ -83,14 +69,11 @@ public class ProductDAO {
                 products.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi lấy sản phẩm còn hàng: " + e.getMessage());
+            System.err.println("Lỗi khi lấy sản phẩm còn hàng: " + e.getMessage());
         }
         return products;
     }
 
-    /**
-     * Tìm sản phẩm theo ID
-     */
     public Product findById(int productId) {
         String sql = SELECT_WITH_CATEGORY + " WHERE p.product_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -101,14 +84,11 @@ public class ProductDAO {
                 return mapResultSet(rs);
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi tìm sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi tìm sản phẩm: " + e.getMessage());
         }
         return null;
     }
 
-    /**
-     * Tìm kiếm sản phẩm theo tên (tìm kiếm tương đối - LIKE)
-     */
     public List<Product> searchByName(String keyword) {
         List<Product> products = new ArrayList<>();
         String sql = SELECT_WITH_CATEGORY + " WHERE p.status = 1 AND p.product_name LIKE ?";
@@ -120,14 +100,11 @@ public class ProductDAO {
                 products.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi tìm kiếm sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi tìm kiếm sản phẩm: " + e.getMessage());
         }
         return products;
     }
 
-    /**
-     * Sắp xếp sản phẩm theo giá (tăng hoặc giảm dần)
-     */
     public List<Product> findAllSortedByPrice(boolean ascending) {
         List<Product> products = new ArrayList<>();
         String sql = SELECT_WITH_CATEGORY + " WHERE p.status = 1 ORDER BY p.price " + (ascending ? "ASC" : "DESC");
@@ -138,14 +115,11 @@ public class ProductDAO {
                 products.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi sắp xếp sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi sắp xếp sản phẩm: " + e.getMessage());
         }
         return products;
     }
 
-    /**
-     * Thêm sản phẩm mới
-     */
     public boolean add(Product product) {
         String sql = "INSERT INTO Products (product_name, category_id, price, stock, color, storage_capacity) " +
                      "VALUES (?, ?, ?, ?, ?, ?)";
@@ -159,14 +133,11 @@ public class ProductDAO {
             ps.setString(6, product.getStorageCapacity());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi thêm sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi thêm sản phẩm: " + e.getMessage());
         }
         return false;
     }
 
-    /**
-     * Cập nhật sản phẩm (KHÔNG cho phép sửa product_id)
-     */
     public boolean update(Product product) {
         String sql = "UPDATE Products SET product_name = ?, category_id = ?, price = ?, " +
                      "stock = ?, color = ?, storage_capacity = ? WHERE product_id = ?";
@@ -181,14 +152,11 @@ public class ProductDAO {
             ps.setInt(7, product.getProductId());
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi cập nhật sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi cập nhật sản phẩm: " + e.getMessage());
         }
         return false;
     }
 
-    /**
-     * Xóa sản phẩm (soft delete - đổi status = 0)
-     */
     public boolean delete(int productId) {
         String sql = "UPDATE Products SET status = 0 WHERE product_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -196,15 +164,11 @@ public class ProductDAO {
             ps.setInt(1, productId);
             return ps.executeUpdate() > 0;
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi xóa sản phẩm: " + e.getMessage());
+            System.err.println("Lỗi khi xóa sản phẩm: " + e.getMessage());
         }
         return false;
     }
 
-    /**
-     * Trừ số lượng tồn kho (dùng trong Transaction khi đặt hàng)
-     * Sử dụng Connection được truyền vào để đảm bảo Transaction
-     */
     public boolean deductStock(Connection conn, int productId, int quantity) throws SQLException {
         String sql = "UPDATE Products SET stock = stock - ? WHERE product_id = ? AND stock >= ?";
         PreparedStatement ps = conn.prepareStatement(sql);
@@ -227,9 +191,7 @@ public class ProductDAO {
         p.setStatus(rs.getBoolean("status"));
         try {
             p.setCategoryName(rs.getString("category_name"));
-        } catch (SQLException ignored) {
-            // category_name may not exist in all queries
-        }
+        } catch (SQLException ignored) {}
         return p;
     }
 }

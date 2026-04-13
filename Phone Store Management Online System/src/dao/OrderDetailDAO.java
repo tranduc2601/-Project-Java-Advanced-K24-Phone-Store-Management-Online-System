@@ -1,3 +1,4 @@
+
 package dao;
 
 import model.OrderDetail;
@@ -7,14 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object cho bảng OrderDetails.
- */
 public class OrderDetailDAO {
 
-    /**
-     * Thêm chi tiết đơn hàng (dùng trong Transaction - nhận Connection từ bên ngoài)
-     */
     public boolean addDetail(Connection conn, OrderDetail detail) throws SQLException {
         String sql = "INSERT INTO OrderDetails (order_id, product_id, quantity, unit_price) VALUES (?, ?, ?, ?)";
         PreparedStatement ps = conn.prepareStatement(sql);
@@ -25,9 +20,6 @@ public class OrderDetailDAO {
         return ps.executeUpdate() > 0;
     }
 
-    /**
-     * Lấy chi tiết đơn hàng theo order_id
-     */
     public List<OrderDetail> findByOrderId(int orderId) {
         List<OrderDetail> details = new ArrayList<>();
         String sql = "SELECT od.*, p.product_name FROM OrderDetails od " +
@@ -47,7 +39,7 @@ public class OrderDetailDAO {
                 details.add(d);
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi lấy chi tiết đơn hàng: " + e.getMessage());
+            System.err.println("Lỗi khi lấy chi tiết đơn hàng: " + e.getMessage());
         }
         return details;
     }

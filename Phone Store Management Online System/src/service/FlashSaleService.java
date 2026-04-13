@@ -6,9 +6,6 @@ import model.FlashSale;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Service xử lý nghiệp vụ Flash Sale (khuyến mãi giảm giá theo thời gian).
- */
 public class FlashSaleService {
     private final FlashSaleDAO flashSaleDAO = new FlashSaleDAO();
 
@@ -26,11 +23,11 @@ public class FlashSaleService {
 
     public boolean addFlashSale(int productId, int discountPercent, LocalDateTime startDate, LocalDateTime endDate) {
         if (discountPercent <= 0 || discountPercent > 100) {
-            System.out.println("⚠️ Phần trăm giảm giá phải từ 1 đến 100!");
+            System.out.println("Phan tram giam gia phai tu 1 den 100!");
             return false;
         }
         if (startDate == null || endDate == null || endDate.isBefore(startDate)) {
-            System.out.println("⚠️ Thời gian không hợp lệ! Ngày kết thúc phải sau ngày bắt đầu.");
+            System.out.println("Thoi gian khong hop le! Ngay ket thuc phai sau ngay bat dau.");
             return false;
         }
 
@@ -42,4 +39,3 @@ public class FlashSaleService {
         return flashSaleDAO.deactivate(flashSaleId);
     }
 }
-

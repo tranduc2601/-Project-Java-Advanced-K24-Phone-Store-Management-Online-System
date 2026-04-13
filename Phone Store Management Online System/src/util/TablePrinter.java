@@ -4,23 +4,14 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Tiện ích hiển thị bảng dữ liệu trên Console.
- */
 public class TablePrinter {
 
     private static final NumberFormat CURRENCY_FORMAT = NumberFormat.getInstance(new Locale("vi", "VN"));
 
-    /**
-     * In đường kẻ ngang
-     */
     public static void printLine(int length) {
         System.out.println("+" + "-".repeat(length - 2) + "+");
     }
 
-    /**
-     * In tiêu đề
-     */
     public static void printHeader(String title) {
         System.out.println();
         printLine(70);
@@ -28,20 +19,14 @@ public class TablePrinter {
         printLine(70);
     }
 
-    /**
-     * Định dạng tiền tệ VND
-     */
     public static String formatCurrency(java.math.BigDecimal amount) {
         if (amount == null) return "0";
         return CURRENCY_FORMAT.format(amount) + " VND";
     }
 
-    /**
-     * In bảng sản phẩm
-     */
     public static void printProductTable(List<model.Product> products) {
         if (products.isEmpty()) {
-            System.out.println("📭 Không có sản phẩm nào.");
+            System.out.println("Khong co san pham nao.");
             return;
         }
         String format = "| %-4s | %-25s | %-12s | %-15s | %-5s | %-10s | %-8s |%n";
@@ -49,7 +34,7 @@ public class TablePrinter {
                 + "-".repeat(17) + "+" + "-".repeat(7) + "+" + "-".repeat(12) + "+" + "-".repeat(10) + "+";
 
         System.out.println(line);
-        System.out.printf(format, "ID", "Tên sản phẩm", "Danh mục", "Giá", "Kho", "Màu", "Bộ nhớ");
+        System.out.printf(format, "ID", "Ten san pham", "Danh muc", "Gia", "Kho", "Mau", "Bo nho");
         System.out.println(line);
 
         for (model.Product p : products) {
@@ -69,22 +54,19 @@ public class TablePrinter {
             );
         }
         System.out.println(line);
-        System.out.println("Tổng: " + products.size() + " sản phẩm");
+        System.out.println("Tong: " + products.size() + " san pham");
     }
 
-    /**
-     * In bảng danh mục
-     */
     public static void printCategoryTable(List<model.Category> categories) {
         if (categories.isEmpty()) {
-            System.out.println("📭 Không có danh mục nào.");
+            System.out.println("Khong co danh muc nao.");
             return;
         }
         String format = "| %-4s | %-25s | %-35s | %-10s |%n";
         String line = "+" + "-".repeat(6) + "+" + "-".repeat(27) + "+" + "-".repeat(37) + "+" + "-".repeat(12) + "+";
 
         System.out.println(line);
-        System.out.printf(format, "ID", "Tên danh mục", "Mô tả", "Trạng thái");
+        System.out.printf(format, "ID", "Ten danh muc", "Mo ta", "Trang thai");
         System.out.println(line);
 
         for (model.Category c : categories) {
@@ -94,18 +76,15 @@ public class TablePrinter {
                     c.getCategoryId(),
                     c.getCategoryName(),
                     desc,
-                    c.isStatus() ? "Hoạt động" : "Đã ẩn"
+                    c.isStatus() ? "Hoat dong" : "Da an"
             );
         }
         System.out.println(line);
     }
 
-    /**
-     * In bảng đơn hàng
-     */
     public static void printOrderTable(List<model.Order> orders) {
         if (orders.isEmpty()) {
-            System.out.println("📭 Không có đơn hàng nào.");
+            System.out.println("Khong co don hang nao.");
             return;
         }
         String format = "| %-6s | %-20s | %-17s | %-12s | %-20s |%n";
@@ -113,7 +92,7 @@ public class TablePrinter {
                 + "-".repeat(14) + "+" + "-".repeat(22) + "+";
 
         System.out.println(line);
-        System.out.printf(format, "Mã ĐH", "Khách hàng", "Tổng tiền", "Trạng thái", "Ngày đặt");
+        System.out.printf(format, "Ma DH", "Khach hang", "Tong tien", "Trang thai", "Ngay dat");
         System.out.println(line);
 
         for (model.Order o : orders) {
@@ -128,7 +107,6 @@ public class TablePrinter {
             );
         }
         System.out.println(line);
-        System.out.println("Tổng: " + orders.size() + " đơn hàng");
+        System.out.println("Tong: " + orders.size() + " don hang");
     }
 }
-

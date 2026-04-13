@@ -6,29 +6,18 @@ import util.InputValidator;
 
 import java.util.Scanner;
 
-/**
- * Menu đăng nhập / đăng ký hệ thống.
- */
 public class AuthMenu {
     private final AuthService authService = new AuthService();
 
-    /**
-     * Hiển thị menu đăng nhập/đăng ký.
-     * @return User đã đăng nhập, hoặc null nếu thoát
-     */
     public User show(Scanner scanner) {
         while (true) {
             System.out.println();
-            System.out.println("╔══════════════════════════════════════════════╗");
-            System.out.println("║   📱 HỆ THỐNG QUẢN LÝ SHOP BÁN ĐIỆN THOẠI  ║");
-            System.out.println("║              PHONE STORE ONLINE              ║");
-            System.out.println("╠══════════════════════════════════════════════╣");
-            System.out.println("║  1. 🔑 Đăng nhập                            ║");
-            System.out.println("║  2. 📝 Đăng ký tài khoản                    ║");
-            System.out.println("║  0. 🚪 Thoát chương trình                   ║");
-            System.out.println("╚══════════════════════════════════════════════╝");
+            System.out.println("PHONE STORE ONLINE");
+            System.out.println("1. Dang nhap");
+            System.out.println("2. Dang ky");
+            System.out.println("0. Thoat");
 
-            int choice = InputValidator.readInt(scanner, "👉 Chọn chức năng: ");
+            int choice = InputValidator.readInt(scanner, "Chon: ");
 
             switch (choice) {
                 case 1:
@@ -39,60 +28,59 @@ public class AuthMenu {
                     handleRegister(scanner);
                     break;
                 case 0:
-                    System.out.println("👋 Cảm ơn bạn đã sử dụng hệ thống. Tạm biệt!");
+                    System.out.println("Tam biet.");
                     System.exit(0);
                     break;
                 default:
-                    System.out.println("⚠️ Lựa chọn không hợp lệ! Vui lòng chọn lại.");
+                    System.out.println("Lua chon khong hop le.");
             }
         }
     }
 
     private User handleLogin(Scanner scanner) {
-        System.out.println("\n--- 🔑 ĐĂNG NHẬP ---");
-        String email = InputValidator.readNonEmptyString(scanner, "📧 Email: ");
-        System.out.print("🔒 Mật khẩu: ");
+        System.out.println("\n--- DANG NHAP ---");
+        String email = InputValidator.readNonEmptyString(scanner, "Email: ");
+        System.out.print("Mat khau: ");
         String password = scanner.nextLine().trim();
 
         User user = authService.login(email, password);
         if (user != null) {
-            System.out.println("✅ Đăng nhập thành công! Xin chào, " + user.getFullName());
-            System.out.println("🏷️ Vai trò: " + (user.isAdmin() ? "Quản trị viên (Admin)" : "Khách hàng (Customer)"));
+            System.out.println("Dang nhap thanh cong! Xin chao, " + user.getFullName());
+            System.out.println("Vai tro: " + (user.isAdmin() ? "Quan tri vien (Admin)" : "Khach hang (Customer)"));
         }
         return user;
     }
 
     private void handleRegister(Scanner scanner) {
-        System.out.println("\n--- 📝 ĐĂNG KÝ TÀI KHOẢN MỚI ---");
+        System.out.println("\n--- DANG KY TAI KHOAN MOI ---");
 
-        String fullName = InputValidator.readNonEmptyString(scanner, "👤 Họ và tên: ");
+        String fullName = InputValidator.readNonEmptyString(scanner, "Ho va ten: ");
 
         String email;
         while (true) {
-            email = InputValidator.readNonEmptyString(scanner, "📧 Email: ");
+            email = InputValidator.readNonEmptyString(scanner, "Email: ");
             if (InputValidator.isValidEmail(email)) break;
-            System.out.println("⚠️ Email không hợp lệ! Email phải chứa ký tự @.");
+            System.out.println("Email khong hop le! Email phai chua ky tu @.");
         }
 
         String phone;
         while (true) {
-            phone = InputValidator.readNonEmptyString(scanner, "📞 Số điện thoại (10 số): ");
+            phone = InputValidator.readNonEmptyString(scanner, "So dien thoai (10 so): ");
             if (InputValidator.isValidPhone(phone)) break;
-            System.out.println("⚠️ Số điện thoại không hợp lệ! Phải là 10 chữ số và bắt đầu bằng 0.");
+            System.out.println("So dien thoai khong hop le! Phai la 10 chu so va bat dau bang 0.");
         }
 
         String password;
         while (true) {
-            password = InputValidator.readNonEmptyString(scanner, "🔒 Mật khẩu (tối thiểu 4 ký tự): ");
+            password = InputValidator.readNonEmptyString(scanner, "Mat khau (toi thieu 4 ky tu): ");
             if (password.length() >= 4) break;
-            System.out.println("⚠️ Mật khẩu phải có ít nhất 4 ký tự!");
+            System.out.println("Mat khau phai co it nhat 4 ky tu!");
         }
 
         if (authService.register(fullName, email, phone, password)) {
-            System.out.println("✅ Đăng ký thành công! Bạn có thể đăng nhập ngay.");
+            System.out.println("Dang ky thanh cong! Ban co the dang nhap ngay.");
         } else {
-            System.out.println("❌ Đăng ký thất bại! Vui lòng thử lại.");
+            System.out.println("Dang ky that bai! Vui long thu lai.");
         }
     }
 }
-

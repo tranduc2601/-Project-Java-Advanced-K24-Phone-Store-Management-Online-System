@@ -10,14 +10,14 @@ import java.sql.SQLException;
  */
 public class DatabaseConnection {
     private static final String URL = "jdbc:mysql://localhost:3306/PhoneStoreDB?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true";
-    private static final String USER = "root";
-    private static final String PASS = ""; // Đổi mật khẩu MySQL của bạn ở đây
+    private static final String USER = "root"; // Đ
+    private static final String PASS = "tmd2601."; // Đổi mật khẩu MySQL của bạn ở đây
 
     static {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
-            System.err.println("❌ Không tìm thấy MySQL JDBC Driver! Hãy thêm mysql-connector-j vào thư mục lib/");
+            System.err.println("Không tìm thấy MySQL JDBC Driver! Hãy thêm mysql-connector-j vào thư mục lib/");
             e.printStackTrace();
         }
     }

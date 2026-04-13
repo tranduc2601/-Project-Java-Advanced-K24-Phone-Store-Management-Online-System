@@ -7,9 +7,6 @@ import util.InputValidator;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Service xử lý nghiệp vụ quản lý sản phẩm.
- */
 public class ProductService {
     private final ProductDAO productDAO = new ProductDAO();
 
@@ -41,21 +38,18 @@ public class ProductService {
         return productDAO.findAllSortedByPrice(ascending);
     }
 
-    /**
-     * Thêm sản phẩm mới (có validation giá > 0, số lượng > 0)
-     */
     public boolean addProduct(String name, int categoryId, BigDecimal price, int stock,
                               String color, String storageCapacity) {
         if (!InputValidator.isNotEmpty(name)) {
-            System.out.println("⚠️ Tên sản phẩm không được để trống!");
+            System.out.println("Tên sản phẩm không được để trống!");
             return false;
         }
         if (!InputValidator.isPositiveDecimal(price)) {
-            System.out.println("⚠️ Giá sản phẩm phải lớn hơn 0!");
+            System.out.println("Giá sản phẩm phải lớn hơn 0!");
             return false;
         }
         if (!InputValidator.isPositiveInt(stock)) {
-            System.out.println("⚠️ Số lượng tồn kho phải lớn hơn 0!");
+            System.out.println("Số lượng tồn kho phải lớn hơn 0!");
             return false;
         }
 
@@ -64,26 +58,23 @@ public class ProductService {
         return productDAO.add(product);
     }
 
-    /**
-     * Cập nhật sản phẩm (KHÔNG cho phép sửa ID)
-     */
     public boolean updateProduct(int productId, String name, int categoryId, BigDecimal price,
                                  int stock, String color, String storageCapacity) {
         Product existing = productDAO.findById(productId);
         if (existing == null) {
-            System.out.println("⚠️ Không tìm thấy sản phẩm với ID = " + productId);
+            System.out.println("Không tìm thấy sản phẩm với ID = " + productId);
             return false;
         }
         if (!InputValidator.isNotEmpty(name)) {
-            System.out.println("⚠️ Tên sản phẩm không được để trống!");
+            System.out.println("Tên sản phẩm không được để trống!");
             return false;
         }
         if (!InputValidator.isPositiveDecimal(price)) {
-            System.out.println("⚠️ Giá sản phẩm phải lớn hơn 0!");
+            System.out.println("Giá sản phẩm phải lớn hơn 0!");
             return false;
         }
         if (!InputValidator.isNonNegativeInt(stock)) {
-            System.out.println("⚠️ Số lượng tồn kho phải >= 0!");
+            System.out.println("Số lượng tồn kho phải >= 0!");
             return false;
         }
 
@@ -96,16 +87,12 @@ public class ProductService {
         return productDAO.update(existing);
     }
 
-    /**
-     * Xóa sản phẩm (soft delete)
-     */
     public boolean deleteProduct(int productId) {
         Product existing = productDAO.findById(productId);
         if (existing == null) {
-            System.out.println("⚠️ Không tìm thấy sản phẩm với ID = " + productId);
+            System.out.println("Không tìm thấy sản phẩm với ID = " + productId);
             return false;
         }
         return productDAO.delete(productId);
     }
 }
-

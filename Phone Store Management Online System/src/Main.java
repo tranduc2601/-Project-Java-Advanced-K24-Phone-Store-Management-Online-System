@@ -5,25 +5,6 @@ import presentation.CustomerMenu;
 
 import java.util.Scanner;
 
-/**
- * ============================================================
- *   HỆ THỐNG QUẢN LÝ SHOP BÁN ĐIỆN THOẠI ONLINE
- *       Phone Store Management Online System
- * ============================================================
- *
- * Kiến trúc 5 lớp:
- *   - Model:        Các lớp thực thể (User, Product, Order...)
- *   - DAO:          Tương tác với Database (PreparedStatement)
- *   - Service:      Xử lý nghiệp vụ (Business Logic)
- *   - Presentation: Giao diện Console
- *   - Util:         Tiện ích chung (DB Connection, BCrypt, Validator...)
- *
- * Yêu cầu:
- *   - MySQL Server đang chạy với database PhoneStoreDB (chạy schema.sql)
- *   - Thư viện trong lib/:
- *       + mysql-connector-j-8.x.jar
- *       + jbcrypt-0.4.jar
- */
 public class Main {
     // Chạy chương trình chính, hiển thị menu đăng nhập và điều hướng theo vai trò
     public static void main(String[] args) {

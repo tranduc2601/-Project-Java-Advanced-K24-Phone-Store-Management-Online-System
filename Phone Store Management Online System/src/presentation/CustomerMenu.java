@@ -11,37 +11,30 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Menu dành cho Customer - Mua hàng.
- */
 public class CustomerMenu {
     private final ProductService productService = new ProductService();
     private final OrderService orderService = new OrderService();
     private final CouponService couponService = new CouponService();
     private final FlashSaleService flashSaleService = new FlashSaleService();
 
-    // Giỏ hàng trong bộ nhớ (reset khi đăng xuất)
     private final List<CartItem> cart = new ArrayList<>();
 
     public void show(Scanner scanner, User customer) {
-        cart.clear(); // Reset giỏ khi vào menu
+        cart.clear();
 
         while (true) {
             System.out.println();
-            System.out.println("╔══════════════════════════════════════════════╗");
-            System.out.println("║       🛒 MENU KHÁCH HÀNG (CUSTOMER)         ║");
-            System.out.println("║    Xin chào, " + padRight(customer.getFullName(), 30) + " ║");
-            System.out.println("╠══════════════════════════════════════════════╣");
-            System.out.println("║  1. 📱 Xem sản phẩm còn hàng                ║");
-            System.out.println("║  2. 🛒 Thêm sản phẩm vào giỏ hàng          ║");
-            System.out.println("║  3. 📋 Xem giỏ hàng                         ║");
-            System.out.println("║  4. ✅ Xác nhận đặt hàng (Checkout)         ║");
-            System.out.println("║  5. 📜 Xem lịch sử đơn hàng                ║");
-            System.out.println("║  6. 🔍 Tìm kiếm sản phẩm                   ║");
-            System.out.println("║  0. 🔓 Đăng xuất                            ║");
-            System.out.println("╚══════════════════════════════════════════════╝");
+            System.out.println("MENU KHACH HANG");
+            System.out.println("Xin chao, " + customer.getFullName());
+            System.out.println("1. Xem san pham con hang");
+            System.out.println("2. Them san pham vao gio");
+            System.out.println("3. Xem gio hang");
+            System.out.println("4. Dat hang");
+            System.out.println("5. Lich su don hang");
+            System.out.println("6. Tim kiem san pham");
+            System.out.println("0. Dang xuat");
 
-            int choice = InputValidator.readInt(scanner, "👉 Chọn chức năng: ");
+            int choice = InputValidator.readInt(scanner, "Chon: ");
 
             try {
                 switch (choice) {
@@ -53,30 +46,26 @@ public class CustomerMenu {
                     case 6: searchProducts(scanner); break;
                     case 0:
                         cart.clear();
-                        System.out.println("🔓 Đã đăng xuất.");
+                        System.out.println("Da dang xuat.");
                         return;
                     default:
-                        System.out.println("⚠️ Lựa chọn không hợp lệ!");
+                        System.out.println("Lua chon khong hop le!");
                 }
             } catch (Exception e) {
-                System.out.println("❌ Đã xảy ra lỗi: " + e.getMessage());
+                System.out.println("Da xay ra loi: " + e.getMessage());
             }
         }
     }
 
-    /**
-     * Hiển thị sản phẩm còn hàng (bao gồm Flash Sale nếu có)
-     */
     private void browseProducts() {
         TablePrinter.printHeader("SẢN PHẨM CÒN HÀNG");
         List<Product> products = productService.getInStockProducts();
 
         if (products.isEmpty()) {
-            System.out.println("📭 Hiện tại không có sản phẩm nào còn hàng.");
+            System.out.println("Hien tai khong co san pham nao con hang.");
             return;
         }
 
-        // Hiển thị có gắn thông tin Flash Sale
         String format = "| %-4s | %-25s | %-15s | %-15s | %-5s | %-10s | %-8s |%n";
         String line = "+" + "-".repeat(6) + "+" + "-".repeat(27) + "+" + "-".repeat(17) + "+"
                 + "-".repeat(17) + "+" + "-".repeat(7) + "+" + "-".repeat(12) + "+" + "-".repeat(10) + "+";
@@ -94,7 +83,7 @@ public class CustomerMenu {
                 BigDecimal discounted = p.getPrice()
                         .multiply(BigDecimal.valueOf(100 - sale.getDiscountPercent()))
                         .divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP);
-                salePrice = "🔥-" + sale.getDiscountPercent() + "% " + TablePrinter.formatCurrency(discounted);
+                salePrice = "-" + sale.getDiscountPercent() + "% " + TablePrinter.formatCurrency(discounted);
             } else {
                 salePrice = originalPrice;
             }
@@ -111,34 +100,30 @@ public class CustomerMenu {
             );
         }
         System.out.println(line);
-        System.out.println("Tổng: " + products.size() + " sản phẩm còn hàng");
+        System.out.println("Tong: " + products.size() + " san pham con hang");
     }
 
-    /**
-     * Thêm sản phẩm vào giỏ hàng (kiểm tra stock)
-     */
     private void addToCart(Scanner scanner) {
         browseProducts();
         System.out.println();
-        int productId = InputValidator.readInt(scanner, "Nhập ID sản phẩm muốn mua: ");
+        int productId = InputValidator.readInt(scanner, "Nhap ID san pham muon mua: ");
 
         Product product = productService.getProductById(productId);
         if (product == null || !product.isStatus()) {
-            System.out.println("⚠️ Sản phẩm không tồn tại hoặc đã ngừng kinh doanh!");
+            System.out.println("San pham khong ton tai hoac da ngung kinh doanh!");
             return;
         }
         if (product.getStock() <= 0) {
-            System.out.println("⚠️ Sản phẩm đã hết hàng!");
+            System.out.println("San pham da het hang!");
             return;
         }
 
-        int quantity = InputValidator.readInt(scanner, "Số lượng muốn mua (tồn kho: " + product.getStock() + "): ");
+        int quantity = InputValidator.readInt(scanner, "So luong muon mua (ton kho: " + product.getStock() + "): ");
         if (quantity <= 0) {
-            System.out.println("⚠️ Số lượng phải lớn hơn 0!");
+            System.out.println("So luong phai lon hon 0!");
             return;
         }
 
-        // Kiểm tra số lượng mua so với tồn kho (bao gồm cả số đã có trong giỏ)
         int alreadyInCart = 0;
         for (CartItem item : cart) {
             if (item.getProductId() == productId) {
@@ -148,28 +133,26 @@ public class CustomerMenu {
         }
 
         if (quantity + alreadyInCart > product.getStock()) {
-            System.out.println("⚠️ Không đủ hàng! Tồn kho: " + product.getStock()
-                    + ", đã trong giỏ: " + alreadyInCart
-                    + ", bạn muốn thêm: " + quantity);
+            System.out.println("Khong du hang! Ton kho: " + product.getStock()
+                    + ", da trong gio: " + alreadyInCart
+                    + ", ban muon them: " + quantity);
             return;
         }
 
-        // Tính giá bán (áp dụng Flash Sale nếu có)
         BigDecimal unitPrice = product.getPrice();
         FlashSale sale = flashSaleService.getActiveFlashSaleForProduct(productId);
         if (sale != null) {
             unitPrice = product.getPrice()
                     .multiply(BigDecimal.valueOf(100 - sale.getDiscountPercent()))
                     .divide(BigDecimal.valueOf(100), 0, RoundingMode.HALF_UP);
-            System.out.println("🔥 Flash Sale -" + sale.getDiscountPercent() + "% áp dụng!");
+            System.out.println("Flash Sale -" + sale.getDiscountPercent() + "% ap dung!");
         }
 
-        // Kiểm tra xem đã có trong giỏ chưa → cộng dồn
         boolean found = false;
         for (CartItem item : cart) {
             if (item.getProductId() == productId) {
                 item.setQuantity(item.getQuantity() + quantity);
-                item.setUnitPrice(unitPrice); // cập nhật giá mới nhất
+                item.setUnitPrice(unitPrice);
                 found = true;
                 break;
             }
@@ -178,20 +161,17 @@ public class CustomerMenu {
             cart.add(new CartItem(productId, product.getProductName(), quantity, unitPrice));
         }
 
-        System.out.println("✅ Đã thêm " + quantity + "x " + product.getProductName() + " vào giỏ hàng!");
-        System.out.println("🛒 Giỏ hàng hiện có " + cart.size() + " mặt hàng.");
+        System.out.println("Da them " + quantity + "x " + product.getProductName() + " vao gio hang!");
+        System.out.println("Gio hang hien co " + cart.size() + " mat hang.");
     }
 
-    /**
-     * Hiển thị giỏ hàng
-     */
     private void viewCart() {
         if (cart.isEmpty()) {
-            System.out.println("🛒 Giỏ hàng trống!");
+            System.out.println("Gio hang trong!");
             return;
         }
 
-        System.out.println("\n🛒 GIỎ HÀNG CỦA BẠN:");
+        System.out.println("\nGIỎ HÀNG CỦA BẠN:");
         String format = "| %-4s | %-25s | %-6s | %-15s | %-17s |%n";
         String line = "+" + "-".repeat(6) + "+" + "-".repeat(27) + "+" + "-".repeat(8) + "+"
                 + "-".repeat(17) + "+" + "-".repeat(19) + "+";
@@ -216,49 +196,40 @@ public class CustomerMenu {
             );
         }
         System.out.println(line);
-        System.out.println("💰 TỔNG CỘNG: " + TablePrinter.formatCurrency(total));
+        System.out.println("TỔNG CỘNG: " + TablePrinter.formatCurrency(total));
     }
 
-    /**
-     * Xác nhận đặt hàng (Checkout)
-     */
     private void checkout(Scanner scanner, User customer) {
         if (cart.isEmpty()) {
-            System.out.println("🛒 Giỏ hàng trống! Hãy thêm sản phẩm trước khi đặt hàng.");
+            System.out.println("Gio hang trong! Hay them san pham truoc khi dat hang.");
             return;
         }
 
         viewCart();
         System.out.println();
 
-        String address = InputValidator.readNonEmptyString(scanner, "📍 Nhập địa chỉ giao hàng: ");
+        String address = InputValidator.readNonEmptyString(scanner, "Nhap dia chi giao hang: ");
 
-        // Hỏi mã giảm giá
         Coupon coupon = null;
-        System.out.print("🎫 Nhập mã giảm giá (Enter để bỏ qua): ");
+        System.out.print("Nhap ma giam gia (Enter de bo qua): ");
         String couponCode = scanner.nextLine().trim();
         if (!couponCode.isEmpty()) {
             coupon = couponService.validateAndGet(couponCode);
             if (coupon != null) {
-                System.out.println("✅ Mã giảm giá hợp lệ: -" + coupon.getDiscountPercent() + "%");
+                System.out.println("Ma giam gia hop le: -" + coupon.getDiscountPercent() + "%");
             }
         }
 
-        // Xác nhận
-        if (!InputValidator.confirmYesNo(scanner, "Bạn có chắc chắn muốn đặt hàng?")) {
-            System.out.println("↩️ Đã hủy đặt hàng.");
+        if (!InputValidator.confirmYesNo(scanner, "Ban co chac chan muon dat hang?")) {
+            System.out.println("Da huy dat hang.");
             return;
         }
 
-        // Thực hiện checkout (Transaction)
         if (orderService.checkout(customer.getUserId(), cart, address, coupon)) {
-            cart.clear(); // Xóa giỏ hàng sau khi đặt thành công
+            cart.clear();
         }
     }
 
-    /**
-     * Xem lịch sử đơn hàng + theo dõi trạng thái
-     */
     private void viewOrderHistory(Scanner scanner, User customer) {
         List<Order> orders = orderService.getOrdersByUserId(customer.getUserId());
         TablePrinter.printHeader("LỊCH SỬ ĐƠN HÀNG CỦA BẠN");
@@ -266,7 +237,7 @@ public class CustomerMenu {
 
         if (orders.isEmpty()) return;
 
-        System.out.print("\nNhập mã đơn hàng để xem chi tiết (0 để quay lại): ");
+        System.out.print("\nNhap ma don hang de xem chi tiet (0 de quay lai): ");
         String input = scanner.nextLine().trim();
         if ("0".equals(input)) return;
 
@@ -274,43 +245,33 @@ public class CustomerMenu {
             int orderId = Integer.parseInt(input);
             Order order = orderService.getOrderById(orderId);
             if (order == null || order.getUserId() != customer.getUserId()) {
-                System.out.println("⚠️ Không tìm thấy đơn hàng!");
+                System.out.println("Khong tim thay don hang!");
                 return;
             }
 
-            System.out.println("\n📋 CHI TIẾT ĐƠN HÀNG #" + orderId);
-            System.out.println("   Ngày đặt: " + order.getOrderDate());
-            System.out.println("   Địa chỉ giao: " + order.getDeliveryAddress());
-            System.out.println("   Trạng thái: " + getStatusEmoji(order.getOrderStatus()) + " " + order.getOrderStatus());
-            System.out.println("   Tổng tiền: " + TablePrinter.formatCurrency(order.getTotalAmount()));
+            System.out.println("\nCHI TIẾT ĐƠN HÀNG #" + orderId);
+            System.out.println("   Ngay dat: " + order.getOrderDate());
+            System.out.println("   Dia chi giao: " + order.getDeliveryAddress());
+            System.out.println("   Trang thai: " + order.getOrderStatus());
+            System.out.println("   Tong tien: " + TablePrinter.formatCurrency(order.getTotalAmount()));
 
             List<OrderDetail> details = orderService.getOrderDetails(orderId);
-            System.out.println("\n   Sản phẩm:");
+            System.out.println("\n   San pham:");
             for (OrderDetail d : details) {
                 System.out.println("   - " + (d.getProductName() != null ? d.getProductName() : "SP #" + d.getProductId())
                         + " x" + d.getQuantity()
                         + " @ " + TablePrinter.formatCurrency(d.getUnitPrice()));
             }
         } catch (NumberFormatException e) {
-            System.out.println("⚠️ Mã đơn hàng không hợp lệ!");
+            System.out.println("Ma don hang khong hop le!");
         }
     }
 
     private void searchProducts(Scanner scanner) {
-        String keyword = InputValidator.readNonEmptyString(scanner, "🔍 Nhập từ khóa tìm kiếm: ");
+        String keyword = InputValidator.readNonEmptyString(scanner, "Nhap tu khoa tim kiem: ");
         List<Product> results = productService.searchByName(keyword);
         TablePrinter.printHeader("KẾT QUẢ TÌM KIẾM: \"" + keyword + "\"");
         TablePrinter.printProductTable(results);
-    }
-
-    private String getStatusEmoji(String status) {
-        switch (status) {
-            case "PENDING": return "⏳";
-            case "SHIPPING": return "🚚";
-            case "DELIVERED": return "✅";
-            case "CANCELLED": return "❌";
-            default: return "❓";
-        }
     }
 
     private String padRight(String s, int n) {
@@ -318,4 +279,3 @@ public class CustomerMenu {
         return String.format("%-" + n + "s", s.length() > n ? s.substring(0, n) : s);
     }
 }
-

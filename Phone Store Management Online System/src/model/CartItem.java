@@ -2,9 +2,6 @@ package model;
 
 import java.math.BigDecimal;
 
-/**
- * Represents an item in the in-memory shopping cart.
- */
 public class CartItem {
     private int productId;
     private String productName;

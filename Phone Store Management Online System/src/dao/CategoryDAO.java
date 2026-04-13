@@ -1,3 +1,4 @@
+
 package dao;
 
 import model.Category;
@@ -7,14 +8,8 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object cho bảng Categories.
- */
 public class CategoryDAO {
 
-    /**
-     * Lấy tất cả danh mục (bao gồm cả đã ẩn - dành cho Admin)
-     */
     public List<Category> findAll() {
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM Categories ORDER BY category_id";
@@ -25,14 +20,11 @@ public class CategoryDAO {
                 categories.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi lấy danh sách danh mục: " + e.getMessage());
+            System.err.println("Lỗi khi lấy danh sách danh mục: " + e.getMessage());
         }
         return categories;
     }
 
-    /**
-     * Lấy danh mục đang hoạt động (status = 1)
-     */
     public List<Category> findActive() {
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM Categories WHERE status = 1 ORDER BY category_id";
@@ -43,14 +35,11 @@ public class CategoryDAO {
                 categories.add(mapResultSet(rs));
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi lấy danh mục hoạt động: " + e.getMessage());
+            System.err.println("Lỗi khi lấy danh mục hoạt động: " + e.getMessage());
         }
         return categories;
     }
 
-    /**
-     * Tìm danh mục theo ID
-     */
     public Category findById(int categoryId) {
         String sql = "SELECT * FROM Categories WHERE category_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -61,14 +50,11 @@ public class CategoryDAO {
                 return mapResultSet(rs);
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi tìm danh mục: " + e.getMessage());
+            System.err.println("Lỗi khi tìm danh mục: " + e.getMessage());
         }
         return null;
     }
 
-    /**
-     * Tìm danh mục theo tên (kiểm tra trùng)
-     */
     public Category findByName(String name) {
         String sql = "SELECT * FROM Categories WHERE category_name = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -79,14 +65,11 @@ public class CategoryDAO {
                 return mapResultSet(rs);
             }
         } catch (SQLException e) {
-            System.err.println("❌ Lỗi khi tìm danh mục theo tên: " + e.getMessage());
+            System.err.println("Lỗi khi tìm danh mục theo tên: " + e.getMessage());
         }
         return null;
     }
 
-    /**
-     * Thêm danh mục mới
-     */
     public boolean add(Category category) {
         String sql = "INSERT INTO Categories (category_name, description) VALUES (?, ?)";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -102,9 +85,6 @@ public class CategoryDAO {
         return false;
     }
 
-    /**
-     * Cập nhật danh mục
-     */
     public boolean update(Category category) {
         String sql = "UPDATE Categories SET category_name = ?, description = ? WHERE category_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -121,9 +101,6 @@ public class CategoryDAO {
         return false;
     }
 
-    /**
-     * Xóa mềm danh mục (Soft delete - đổi status = 0)
-     */
     public boolean softDelete(int categoryId) {
         String sql = "UPDATE Categories SET status = 0 WHERE category_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
@@ -136,9 +113,6 @@ public class CategoryDAO {
         return false;
     }
 
-    /**
-     * Khôi phục danh mục đã xóa mềm
-     */
     public boolean restore(int categoryId) {
         String sql = "UPDATE Categories SET status = 1 WHERE category_id = ?";
         try (Connection conn = DatabaseConnection.getConnection();
